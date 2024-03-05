@@ -6,8 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
-class UStaticMeshComponent;
-
 UCLASS()
 class SOULSLIKE_API AItem : public AActor
 {
