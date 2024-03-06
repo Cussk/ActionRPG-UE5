@@ -60,6 +60,8 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	}
 
 	//PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ABird::MoveForward);
+	PlayerInputComponent->BindAxis(FName("Turn"), this, &ABird::Turn);
+	PlayerInputComponent->BindAxis(FName("LookUp"), this, &ABird::LookUp);
 }
 
 void ABird::Move(const FInputActionValue& Value)
@@ -80,5 +82,15 @@ void ABird::MoveForward(float Value)
 		FVector ForwardVector = GetActorForwardVector();
 		AddMovementInput(ForwardVector, Value);
 	}
+}
+
+void ABird::Turn(float Value)
+{
+	AddControllerYawInput(Value);
+}
+
+void ABird::LookUp(float Value)
+{
+	AddControllerPitchInput(Value);
 }
 
