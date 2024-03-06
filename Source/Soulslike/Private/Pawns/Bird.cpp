@@ -3,7 +3,11 @@
 
 #include "Pawns/Bird.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
+#include "Components/InputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 ABird::ABird()
 {
@@ -16,6 +20,13 @@ ABird::ABird()
 
 	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>("SkeletalMeshComponent");
 	SkeletalMeshComponent->SetupAttachment(GetRootComponent());
+
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArmComponent");
+	SpringArmComponent->SetupAttachment(GetRootComponent());
+	SpringArmComponent->TargetArmLength = 300.0f;
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
+	CameraComponent->SetupAttachment(SpringArmComponent);
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
@@ -43,16 +54,31 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ABird::MoveForward);
-}
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+	}
 
-void ABird::MoveForward(float Value)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Value: %f"), Value);
+	//PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ABird::MoveForward);
 }
 
 void ABird::Move(const FInputActionValue& Value)
 {
-	
+	const float DirectionValue = Value.Get<float>();
+
+	if (Controller && DirectionValue != 0)
+	{
+		const FVector ForwardVector = GetActorForwardVector();
+		AddMovementInput(ForwardVector, DirectionValue);
+	}
+}
+
+void ABird::MoveForward(float Value)
+{
+	if (Controller && Value != 0.0f)
+	{
+		FVector ForwardVector = GetActorForwardVector();
+		AddMovementInput(ForwardVector, Value);
+	}
 }
 

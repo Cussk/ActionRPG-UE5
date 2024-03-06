@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
 #include "Bird.generated.h"
 
-struct FInputActionValue;
+class UCameraComponent;
+class USpringArmComponent;
 class UInputAction;
 class UInputMappingContext;
 class UCapsuleComponent;
@@ -42,4 +44,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> SkeletalMeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USpringArmComponent> SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCameraComponent> CameraComponent;
 };
