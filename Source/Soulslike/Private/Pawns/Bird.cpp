@@ -85,8 +85,10 @@ void ABird::Look(const FInputActionValue& Value)
 	}
 }
 
-//OLD INPUT SYSTEM
 
+
+
+//OLD INPUT SYSTEM
 void ABird::BindInputOldVersion(UInputComponent* PlayerInputComponent)
 {
 	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ABird::MoveForward);
