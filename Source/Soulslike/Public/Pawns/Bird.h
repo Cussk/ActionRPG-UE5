@@ -22,7 +22,7 @@ public:
 	ABird();
 
 	virtual void Tick(float DeltaTime) override;
-	
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
@@ -34,7 +34,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> LookAction;
+
 	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
 	
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -49,7 +53,9 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UCameraComponent> CameraComponent;
 
+	//OLD INPUT SYSTEM
 protected:
+	void BindInputOldVersion(UInputComponent* PlayerInputComponent);
 	void MoveForward(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);

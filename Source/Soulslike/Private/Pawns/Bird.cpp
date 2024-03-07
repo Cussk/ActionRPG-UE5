@@ -57,11 +57,10 @@ void ABird::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABird::Move);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABird::Look);
 	}
 
-	//PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ABird::MoveForward);
-	PlayerInputComponent->BindAxis(FName("Turn"), this, &ABird::Turn);
-	PlayerInputComponent->BindAxis(FName("LookUp"), this, &ABird::LookUp);
+	//BindInputOldVersion(PlayerInputComponent);
 }
 
 void ABird::Move(const FInputActionValue& Value)
@@ -73,6 +72,26 @@ void ABird::Move(const FInputActionValue& Value)
 		const FVector ForwardVector = GetActorForwardVector();
 		AddMovementInput(ForwardVector, DirectionValue);
 	}
+}
+
+void ABird::Look(const FInputActionValue& Value)
+{
+	const FVector2D LookAxisValue = Value.Get<FVector2D>();
+
+	if (Controller)
+	{
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
+	}
+}
+
+//OLD INPUT SYSTEM
+
+void ABird::BindInputOldVersion(UInputComponent* PlayerInputComponent)
+{
+	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ABird::MoveForward);
+	PlayerInputComponent->BindAxis(FName("Turn"), this, &ABird::Turn);
+	PlayerInputComponent->BindAxis(FName("LookUp"), this, &ABird::LookUp);
 }
 
 void ABird::MoveForward(float Value)
