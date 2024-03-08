@@ -2,6 +2,7 @@
 
 
 #include "Characters/SoulsCharacter.h"
+#include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 
@@ -46,12 +47,14 @@ void ASoulsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASoulsCharacter::Move(const FInputActionValue& Value)
 {
-	const FVector MoveAxisValue = Value.Get<FVector>();
+	const FVector2D MovementVector = Value.Get<FVector2D>();
 
 	if(Controller)
 	{
-		AddMovementInput(MoveAxisValue, MoveAxisValue.X);
-		AddMovementInput(MoveAxisValue, MoveAxisValue.Y);
+		const FVector Forward = GetActorForwardVector();
+		AddMovementInput(Forward, MovementVector.Y);
+		const FVector Right = GetActorRightVector();
+		AddMovementInput(Right, MovementVector.X);
 	}
 }
 
