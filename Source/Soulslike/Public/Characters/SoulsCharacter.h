@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "SoulsCharacter.generated.h"
 
+class UCameraComponent;
+class USpringArmComponent;
 class UInputAction;
 class UInputMappingContext;
 
@@ -19,6 +21,7 @@ public:
 	ASoulsCharacter();
 
 	virtual void Tick(float DeltaTime) override;
+	void OldInputSystemBinding(UInputComponent* PlayerInputComponent);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 protected:
@@ -30,9 +33,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> LookAction;
+
 	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USpringArmComponent> SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCameraComponent> CameraComponent;
 
 	//OLD INPUT SYSTEM
 protected:
 	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void Turn(float Value);
+	void LookUp(float Value);
 };
