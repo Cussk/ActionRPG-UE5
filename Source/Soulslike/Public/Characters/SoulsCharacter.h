@@ -11,6 +11,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class UInputAction;
 class UInputMappingContext;
+class UGroomComponent;
 
 UCLASS()
 class SOULSLIKE_API ASoulsCharacter : public ACharacter
@@ -45,6 +46,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UCameraComponent> CameraComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = Hair)
+	TObjectPtr<UGroomComponent> Hair;
+
+	UPROPERTY(VisibleAnywhere, Category = Hair)
+	TObjectPtr<UGroomComponent> Eyebrows;
 
 	//OLD INPUT SYSTEM
 protected:
