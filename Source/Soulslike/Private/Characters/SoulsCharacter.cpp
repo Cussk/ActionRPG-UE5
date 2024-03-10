@@ -65,8 +65,9 @@ void ASoulsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::Look);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	}
-
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	//OldInputSystemBinding(PlayerInputComponent);
 
 }
@@ -107,6 +108,8 @@ void ASoulsCharacter::OldInputSystemBinding(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASoulsCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &ASoulsCharacter::Turn);
 	PlayerInputComponent->BindAxis("LookUp", this, &ASoulsCharacter::LookUp);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 }
 
 void ASoulsCharacter::MoveForward(float Value)
