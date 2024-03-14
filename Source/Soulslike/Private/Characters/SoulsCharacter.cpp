@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GroomComponent.h"
+#include "Items/Weapons/Weapon.h"
 
 ASoulsCharacter::ASoulsCharacter()
 {
@@ -65,9 +66,10 @@ void ASoulsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::Look);
-		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(EKeyPressedAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::EKeyPressed);
 	}
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	//OldInputSystemBinding(PlayerInputComponent);
 
 }
@@ -99,6 +101,16 @@ void ASoulsCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+void ASoulsCharacter::EKeyPressed()
+{
+	AWeapon* OverlappingWeapon = Cast<AWeapon>(OverlappingItem);
+	if (OverlappingItem)
+	{
+		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
+		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+	}
+}
+
 
 //OLD INPUT SYSTEM
 
@@ -110,6 +122,7 @@ void ASoulsCharacter::OldInputSystemBinding(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("LookUp", this, &ASoulsCharacter::LookUp);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ASoulsCharacter::EKeyPressed);
 }
 
 void ASoulsCharacter::MoveForward(float Value)

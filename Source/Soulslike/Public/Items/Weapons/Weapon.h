@@ -13,6 +13,8 @@ UCLASS()
 class SOULSLIKE_API AWeapon : public AItem
 {
 	GENERATED_BODY()
+public:
+	void Equip(USceneComponent* InParent, FName InSocketName);
 protected:
 	
 	virtual void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "ECharacterState.h"
 #include "SoulsAnimInstance.generated.h"
 
 class UCharacterMovementComponent;
@@ -31,4 +32,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement)
 	bool bIsFalling;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Movement | Character State")
+	ECharacterState CharacterState;
 };

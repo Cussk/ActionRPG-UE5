@@ -25,5 +25,6 @@ void USoulsAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	{
 		GroundSpeed = UKismetMathLibrary::VSizeXY(SoulsCharacterMovement->Velocity);
 		bIsFalling = SoulsCharacterMovement-> IsFalling();
+		CharacterState = SoulsCharacter->GetCharacterState();
 	}
 }

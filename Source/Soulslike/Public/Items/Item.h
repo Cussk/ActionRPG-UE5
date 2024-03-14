@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sine Parameters")
 	float TimeConstant = 5.0f;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
+
 	UFUNCTION(BlueprintPure)
 	float TransformedSin();
 
@@ -41,9 +44,6 @@ protected:
 private:	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> SphereComponent;
