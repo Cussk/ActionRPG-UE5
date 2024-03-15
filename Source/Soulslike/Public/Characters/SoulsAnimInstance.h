@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
-#include "ECharacterState.h"
+#include "CharacterTypes.h"
 #include "SoulsAnimInstance.generated.h"
 
 class UCharacterMovementComponent;

@@ -68,8 +68,9 @@ void ASoulsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::Look);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(EKeyPressedAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::EKeyPressed);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ASoulsCharacter::Attack);
 	}
-	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	
 	//OldInputSystemBinding(PlayerInputComponent);
 
 }
@@ -111,6 +112,51 @@ void ASoulsCharacter::EKeyPressed()
 	}
 }
 
+void ASoulsCharacter::Attack()
+{	
+	if (CanAttack())
+	{
+		PlayAttackMontage();
+		ActionState = EActionState::EAS_Attacking;
+	}
+}
+
+bool ASoulsCharacter::CanAttack()
+{
+	return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+void ASoulsCharacter::PlayAttackMontage()
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && AttackMontage)
+	{
+		AnimInstance->Montage_Play(AttackMontage);
+
+		const int32 RandomSelection = FMath::RandRange(0, 1);
+		FName SectionName = FName();
+		
+		switch (RandomSelection)
+		{
+		case 0:
+			SectionName = FName("Attack1");
+			break;
+		case 1:
+			SectionName = FName("Attack2");
+			break;
+		default:
+			break;
+		}
+
+		AnimInstance->Montage_JumpToSection(SectionName, AttackMontage);
+	}
+}
+
+void ASoulsCharacter::AttackEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}
 
 //OLD INPUT SYSTEM
 
@@ -123,6 +169,7 @@ void ASoulsCharacter::OldInputSystemBinding(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &ASoulsCharacter::EKeyPressed);
+	PlayerInputComponent->BindAction("Attack", IE_Pressed, this, &ASoulsCharacter::Attack);
 }
 
 void ASoulsCharacter::MoveForward(float Value)

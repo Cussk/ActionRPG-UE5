@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CharacterTypes.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "ECharacterState.h"
+#include "CharacterTypes.h"
 #include "SoulsCharacter.generated.h"
 
 class AItem;
@@ -14,6 +15,7 @@ class USpringArmComponent;
 class UInputAction;
 class UInputMappingContext;
 class UGroomComponent;
+class UAnimMontage;
 
 UCLASS()
 class SOULSLIKE_API ASoulsCharacter : public ACharacter
@@ -51,11 +53,24 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<UInputAction> DodgeAction;
 
+	//Enhanced Input
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void EKeyPressed();
+	void Attack();
+
+	bool CanAttack();
+	
+	//Play Montages
+	void PlayAttackMontage();
+protected:
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
 
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	EActionState ActionState = EActionState::EAS_Unoccupied;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
@@ -72,6 +87,11 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	TObjectPtr<AItem> OverlappingItem;
 
+	//Animation Montages
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	TObjectPtr<UAnimMontage> AttackMontage;
+
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
@@ -82,5 +102,4 @@ protected:
 	void MoveRight(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
-	void EKeyPressed();
 };
