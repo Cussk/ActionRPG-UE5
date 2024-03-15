@@ -8,6 +8,7 @@ void AWeapon::Equip(USceneComponent* InParent, const FName InSocketName)
 	const FAttachmentTransformRules TransformRules(EAttachmentRule::SnapToTarget, true);
 		
 	StaticMeshComponent->AttachToComponent(InParent, TransformRules, InSocketName);
+	ItemState = EItemstate::EIS_Equipped;
 }
 
 void AWeapon::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

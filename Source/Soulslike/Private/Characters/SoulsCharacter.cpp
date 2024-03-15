@@ -77,8 +77,9 @@ void ASoulsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASoulsCharacter::Move(const FInputActionValue& Value)
 {
+	if (ActionState == EActionState::EAS_Attacking) return;
+	
 	const FVector2D MovementVector = Value.Get<FVector2D>();
-
 	if(Controller)
 	{
 		const FRotator ControlRotation = Controller->GetControlRotation();

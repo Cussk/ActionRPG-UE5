@@ -8,6 +8,12 @@
 
 class USphereComponent;
 
+enum class EItemstate : uint8
+{
+	EIS_Hovering,
+	EIS_Equipped
+};
+
 UCLASS()
 class SOULSLIKE_API AItem : public AActor
 {
@@ -28,6 +34,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
+
+	EItemstate ItemState = EItemstate::EIS_Hovering;
 
 	UFUNCTION(BlueprintPure)
 	float TransformedSin();
