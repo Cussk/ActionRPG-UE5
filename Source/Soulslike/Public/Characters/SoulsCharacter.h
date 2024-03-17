@@ -9,6 +9,7 @@
 #include "CharacterTypes.h"
 #include "SoulsCharacter.generated.h"
 
+class AWeapon;
 class AItem;
 class UCameraComponent;
 class USpringArmComponent;
@@ -60,12 +61,25 @@ protected:
 	void Attack();
 
 	bool CanAttack();
+	bool CanDisarm();
+	bool CanArm();
 	
 	//Play Montages
 	void PlayAttackMontage();
-protected:
+	void PlayEquipMontage(FName SectionName);
+
+	//Anim Notify Functions
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
+
+	UFUNCTION(BlueprintCallable)
+	void EquippingEnd();
+
+	UFUNCTION(BlueprintCallable)
+	void Disarm();
+
+	UFUNCTION(BlueprintCallable)
+	void Arm();
 
 private:
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
@@ -87,10 +101,16 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 	TObjectPtr<AItem> OverlappingItem;
 
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	TObjectPtr<AWeapon> EquippedWeapon;
+
 	//Animation Montages
 
 	UPROPERTY(EditDefaultsOnly, Category = Montages)
 	TObjectPtr<UAnimMontage> AttackMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = Montages)
+	TObjectPtr<UAnimMontage> EquipMontage;
 
 public:
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }

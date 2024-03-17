@@ -35,6 +35,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USphereComponent> SphereComponent;
+
 	EItemstate ItemState = EItemstate::EIS_Hovering;
 
 	UFUNCTION(BlueprintPure)
@@ -53,6 +56,5 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float RunningTime;
 
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> SphereComponent;
+	
 };

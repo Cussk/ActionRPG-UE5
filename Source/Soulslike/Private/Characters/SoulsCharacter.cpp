@@ -77,7 +77,7 @@ void ASoulsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASoulsCharacter::Move(const FInputActionValue& Value)
 {
-	if (ActionState == EActionState::EAS_Attacking) return;
+	if (ActionState != EActionState::EAS_Unoccupied) return;
 	
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 	if(Controller)
@@ -110,6 +110,23 @@ void ASoulsCharacter::EKeyPressed()
 	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+		OverlappingItem = nullptr;
+		EquippedWeapon = OverlappingWeapon;
+	}
+	else
+	{
+		if (CanDisarm())
+		{
+			PlayEquipMontage(FName("Unequip"));
+			CharacterState = ECharacterState::ECS_Unequipped;
+			ActionState = EActionState::EAS_EquippingWeapon;
+		}
+		else if (CanArm())
+		{
+			PlayEquipMontage(FName("Equip"));
+			CharacterState = ECharacterState::ECS_EquippedOneHandedWeapon;
+			ActionState = EActionState::EAS_EquippingWeapon;
+		}
 	}
 }
 
@@ -125,6 +142,18 @@ void ASoulsCharacter::Attack()
 bool ASoulsCharacter::CanAttack()
 {
 	return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+bool ASoulsCharacter::CanDisarm()
+{
+	return ActionState == EActionState::EAS_Unoccupied && CharacterState != ECharacterState::ECS_Unequipped;
+}
+
+bool ASoulsCharacter::CanArm()
+{
+	return ActionState == EActionState::EAS_Unoccupied &&
+		CharacterState == ECharacterState::ECS_Unequipped &&
+			EquippedWeapon;
 }
 
 void ASoulsCharacter::PlayAttackMontage()
@@ -154,9 +183,40 @@ void ASoulsCharacter::PlayAttackMontage()
 	}
 }
 
+void ASoulsCharacter::PlayEquipMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
+	}
+}
+
 void ASoulsCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASoulsCharacter::EquippingEnd()
+{
+	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASoulsCharacter::Disarm()
+{
+	if(EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void ASoulsCharacter::Arm()
+{
+	if(EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
 }
 
 //OLD INPUT SYSTEM
