@@ -7,6 +7,7 @@
 #include "Weapon.generated.h"
 
 class USoundBase;
+class UBoxComponent;
 
 /**
  * 
@@ -16,6 +17,7 @@ class SOULSLIKE_API AWeapon : public AItem
 {
 	GENERATED_BODY()
 public:
+	AWeapon();
 	void AttachMeshToSocket(USceneComponent* InParent, FName InSocketName) const;
 	void Equip(USceneComponent* InParent, FName InSocketName);
 	
@@ -27,6 +29,9 @@ protected:
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 	
 private:
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	TObjectPtr<UBoxComponent> WeaponBoxComponent;
+	
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	TObjectPtr<USoundBase> EquipSound;
 };
